@@ -1,2 +1,2 @@
 # SOC542-HW2
-SOC577 Homework 2
+Please open the `hw2.Rmd` file and follow the instructions.
