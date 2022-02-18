@@ -1,0 +1,188 @@
+---
+title: "SOC542 Homework 2: Multiple regression"
+author: "Your name here"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+# This cell is here to set some options for how the output should be rendered.
+# Do not edit anything here
+# The following lines define how the output of code chunks should behave
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(include = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+
+# Packages
+library(tidyverse)
+library(knitr)
+library(stargazer)
+
+set.seed(08901) # Setting seed for random number generator
+```
+
+
+## Instructions
+This assignment will cover the material from weeks 3-5, mostly focusing on multiple regression.  There are three sections. The first section deals with model specification, the second model estimation (focusing on differences between Bayesian and frequentist approaches), and the third on model interpretation.
+
+**Please begin by adding your name to the top of the document on line 3.** Instructions for how to submit the assignment are provided at the bottom on the document. The procedure is the same as the previous assignment.
+
+#  Questions
+## Part 1: Model specification
+The first set of questions relate to the specification of multiple regression models. In each case, you will be presented with a set of random variables and regression model estimated using the `lm` function. Your task is to analyze each model and to assess whether it is appropriately specified. Feel free to add additional code to evaluate the specified models, although only the written answers are required.
+
+Provide written answers in space *below* each chunk.
+
+Q1. Is this model below appropriately specified? If not, please modify the code to define an alternative model and explain your reasoning. *Add your written answers below*
+```{r q1, echo=TRUE, tidy=TRUE}
+N <- 500
+x <- rnorm(N)
+z <- rnorm(N)
+y <- 0.2*x + rnorm(N)
+
+model1 <- lm(y ~ x + z)
+```
+Answers:
+
+Q2. Is this model below appropriately specified? If not, please modify the code to a more suitable specification and explain your decision below.
+```{r q2, echo=TRUE, tidy=TRUE}
+# Note: `N` is already defined above
+x <- rnorm(N)
+x2 <- rnorm(N)
+z <- rnorm(N)
+y <- 0.2*x + 0.3*x2 + rnorm(N)
+
+model2 <- lm(y ~ x + x2 + z)
+```
+Answers:
+
+
+Q3. Considering the model above, do we need to include `x2` in the formula if we are only concerned about making inferences about `x`?
+Answer: 
+
+Q4. Is this model below appropriately specified? If not, please modify the code to a more suitable specification and explain your decision below.
+```{r q4, echo=TRUE, tidy=TRUE}
+# Note: `N` is already defined above
+x <- rnorm(N)
+x2 <- 0.1*x + rnorm(N)
+z <- rnorm(N)
+y <- 0.2*x + 0.3*x2  + rnorm(N)
+
+model3 <- lm(y ~ x)
+```
+Answer:
+
+Q5. Is this model below appropriately specified? If not, please modify the code to a more suitable specification and explain your decision below.
+```{r q5, echo=TRUE, tidy=TRUE}
+# Note: `N` is already defined above
+x <- rnorm(N)
+x2 <- 0.1*x + rnorm(N)
+z <- 0.05*x2 + rnorm(N)
+y <- 0.2*x + 0.3*x2 + -0.5*z + rnorm(N)
+
+model4 <- lm(y ~ x + x2)
+```
+Answer:
+
+Q6. Is this model below appropriately specified? If not, please modify the code to a more suitable specification and explain your decision below.
+```{r q6, echo=TRUE, tidy=TRUE}
+# Note: `N` is already defined above
+x <- rnorm(N)
+x2 <- 0.1*x + rnorm(N)
+z <- 0.8*x2 + 0.4*x + rnorm(N)
+y <- 0.2*x + 0.3*x2 + 0.4*z + rnorm(N)
+
+model5 <- lm(y ~ x + x2 + z)
+```
+Answer:
+
+Q7. Is this model below appropriately specified? If not, please modify the code to a more suitable specification and explain your decision below.
+```{r q7, echo=TRUE, tidy=TRUE}
+# Note: `N` is already defined above
+x <- rnorm(N)
+x2 <- 0.1*x + rnorm(N)
+z <- x + rnorm(N, 0, 0)
+y <- 0.2*x + 0.3*x2 + rnorm(N)
+
+model5 <- lm(y ~ x + x2 + z)
+```
+Answer:
+
+## Part 2: Model estimation
+
+We have considered two different types of estimation in this class: frequentist and Bayesian. Please answer the following questions. Each answer should require no more than a couple of sentences.
+
+Q8. Explain the major differences in the theoretical foundations of each approach to statistical inference.
+
+Q9. What is the difference between the prior and the posterior distribution in Bayesian statistics? You may want to make reference to the likelihood in your answer.
+
+Q10. In frequentist statistics, we typically test hypotheses by using null hypothesis tests and p-values. What are some of the potential problems with such an approach?
+
+Q11. Describe the key differences between frequentist confidence intervals and Bayesian credible interval and their interpretation.
+
+Q12. In frequentist inference, we can derive OLS estimates directly using matrix algebra. Modern Bayesian inference relies upon approximation approaches such Markov Chain Monte Carlo (MCMC). Why do we use MCMC sampling methods for Bayesian inference?
+
+## Part 3: Model interpretation
+
+The final section involves the interpretation of a set of different regression analyses. The models will include linear variables, dummy variables, and non-linear transformations. Run the chunk below to load the data then answer the following questions.
+
+```{r load-gss, echo=TRUE, tidy=TRUE}
+gss <- haven::read_dta("data/GSS2018.dta")
+
+gss <- gss %>% 
+  select(conrinc, height, educ, maeduc, paeduc, sex, age, wtss) %>%
+    haven::zap_labels() %>%
+    drop_na()
+```
+
+Q13. Examine the model below and interpret the intercept and the coefficients and the R-squared statistics. In general terms, what can we infer from this model?
+```{r q13, echo=TRUE, tidy=TRUE}
+m1 <- lm(conrinc ~ sex + age + height, data = gss)
+summary(m1)
+```
+Answer: 
+
+Q14. Let's run the same model but with an additional control for education. Examine the model below and interpret the results. Do you notice any differences from the previous model? Are these changes surprising?
+```{r q14, echo=TRUE, tidy=TRUE}
+m2 <- lm(conrinc ~ sex + age + height + educ, data = gss)
+summary(m2)
+```
+
+Answer:
+
+Q15. Let's add two more variables, mother's education and father's education in years. How do the results change? What issues might arise when we include these variables?
+```{r q15, echo=TRUE, tidy=TRUE}
+m3 <- lm(conrinc ~ sex + age + height + educ + maeduc + paeduc, data = gss)
+summary(m3)
+```
+Answer:
+
+Q16. Finally, we can take the logarithm of income as the outcome and add a predictor for age squared. In the space below, interpret the coefficients for age and age2 and explain the observed pattern.
+```{r q16, echo=TRUE, tidy=TRUE}
+gss$conrinc.log <- log(gss$conrinc)
+gss$age2 <- gss$age^2
+m3 <- lm(conrinc.log ~ sex + age + age2 + height + educ + maeduc + paeduc, data = gss)
+summary(m3)
+```
+
+Q17. Define and run your own model to predict income or log income. Choose a set of predictors from the subset you have been provided with that a reasonable analyst might expect to predict income (Some of predictors used above are probably unreasonable). You may use any combination of the predictors and any additional transformations. Discuss your decisions and compare the results to those observed above. Are there any additional factors that you might want to account for?
+```{r q17, echo=TRUE, tidy=TRUE}
+#
+```
+Answer: 
+
+# Submission instructions
+Once you have finished the assignment please complete the following steps to submit it:
+
+1. Click on the ``Knit`` menu at the top of the screen and select ``Knit to PDF``. Assuming there are no errors, this will render the RMarkdown document in a PDF. Verify that this document contains all of your answers.
+2. Add *both* this document and the PDF file to Github. Use ``Homework submitted`` as your main commit message.
+3. Push the commit to Github.
+4. Visit the Github repository in your browser and verify that the final version of both files has been correctly uploaded.
+
+If you cannot render the document to PDF then you can also try to render it as an HTML file, although a PDF is preferable. You may commit changes as many times as you need until the deadline. I encourage you to do a test commit before you commit the final version of the homework.
+
+It is possible that ``Knit`` will produce an error if you have any ``install.packages()`` calls in this document. If this happens, remove the calls. Please also avoid any unnecessary `print` or `View` calls in the final document.
+
+
