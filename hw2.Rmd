@@ -106,7 +106,7 @@ x2 <- 0.1*x + rnorm(N)
 z <- x + rnorm(N, 0, 0)
 y <- 0.2*x + 0.3*x2 + rnorm(N)
 
-model5 <- lm(y ~ x + x2 + z)
+model6 <- lm(y ~ x + x2 + z)
 ```
 Answer:
 
