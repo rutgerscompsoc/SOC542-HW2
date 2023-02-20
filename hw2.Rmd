@@ -35,7 +35,7 @@ The first set of questions relate to the specification of multiple regression mo
 
 Provide written answers in space *below* each chunk.
 
-Q1. Is this model below appropriately specified? If not, please modify the code to define an alternative model and explain your reasoning. *Add your written answers below*
+Q1. A set of random variables `x`, `y`, and `z` is defined below. We want to estimate the effect of `x` on `y`. Is this model below appropriately specified? If not, please modify the code to define an alternative model and explain your reasoning. *Add your written answers below*
 ```{r q1, echo=TRUE, tidy=TRUE}
 N <- 500
 x <- rnorm(N)
@@ -46,7 +46,7 @@ model1 <- lm(y ~ x + z)
 ```
 Answers:
 
-Q2. Is this model below appropriately specified? If not, please modify the code to a more suitable specification and explain your decision below.
+Q2. Once again, we want to estimate the effect of the new `x` on `y`. Is this model below appropriately specified? If not, please modify the code to a more suitable specification and explain your decision below.
 ```{r q2, echo=TRUE, tidy=TRUE}
 # Note: `N` is already defined above
 x <- rnorm(N)
@@ -112,7 +112,7 @@ Answer:
 
 ## Part 2: Model estimation
 
-We have considered two different types of estimation in this class: frequentist and Bayesian. Please answer the following questions. Each answer should require no more than a couple of sentences.
+We have considered two different types of estimation in this class: frequentist and Bayesian. Please answer the following questions. Each answer should be a short paragraph.
 
 Q8. Explain the major differences in the theoretical foundations of each approach to statistical inference.
 
